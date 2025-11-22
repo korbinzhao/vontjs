@@ -1,0 +1,27 @@
+{
+  "name": "vont-monorepo",
+  "version": "1.0.0",
+  "description": "Vont Framework - Full-stack Koa + React framework",
+  "private": true,
+  "workspaces": [
+    "vont",
+    "demo"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=demo",
+    "build": "npm run build --workspace=vont && npm run build --workspace=demo",
+    "start": "npm run start --workspace=demo",
+    "build:vont": "npm run build --workspace=vont",
+    "build:demo": "npm run build --workspace=demo"
+  },
+  "keywords": [
+    "koa",
+    "react",
+    "framework",
+    "full-stack",
+    "typescript",
+    "vite"
+  ],
+  "author": "",
+  "license": "MIT"
+}

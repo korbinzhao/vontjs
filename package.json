@@ -12,9 +12,7 @@
     "build": "npm run build --workspace=vont",
     "start": "npm run start --workspace=examples/koa-react-ts",
     "build:vont": "npm run build --workspace=vont",
-    "build:examples/koa-react-ts": "npm run build --workspace=examples/koa-react-ts",
-    "prepublishOnly": "npm run build",
-    "publish": "npm publish --workspace=vont"
+    "build:examples/koa-react-ts": "npm run build --workspace=examples/koa-react-ts"
   },
   "keywords": [
     "koa",

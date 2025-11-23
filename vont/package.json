@@ -1,12 +1,12 @@
 {
   "name": "vont",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.7",
   "description": "A full-stack framework combining Koa and React with file-based routing",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "vont": "./bin/vont.js"
+    "vont": "bin/vont.js"
   },
   "exports": {
     ".": {
@@ -30,8 +30,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "prepublishOnly": "npm run build",
-    "publish": "npm publish"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "vont",
@@ -78,7 +77,6 @@
     "@vitejs/plugin-vue": "^6.0.0",
     "@tailwindcss/vite": "^4.0.0",
     "@vitejs/plugin-react": "^5.0.0"
-
   },
   "peerDependenciesMeta": {
     "vue": {
@@ -101,11 +99,10 @@
     "node": ">=18.0.0"
   },
   "publishConfig": {
-    "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/korbinzhao/vontjs.git"
+    "url": "git+https://github.com/korbinzhao/vontjs.git"
   }
 }

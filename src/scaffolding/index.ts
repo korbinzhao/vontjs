@@ -1,11 +1,18 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import prompts from 'prompts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 type Template = 'react-ts' | 'vue-ts';
+
+interface TemplateInfo {
+  name: Template;
+  display: string;
+  color: string;
+}
 
 /**
  * 递归复制目录
@@ -43,6 +50,24 @@ export function getAvailableTemplates(): Template[] {
 }
 
 /**
+ * 获取模板信息列表
+ */
+function getTemplateInfoList(): TemplateInfo[] {
+  return [
+    {
+      name: 'react-ts',
+      display: 'React',
+      color: 'cyan',
+    },
+    {
+      name: 'vue-ts',
+      display: 'Vue',
+      color: 'green',
+    },
+  ];
+}
+
+/**
  * 验证模板是否存在
  */
 export function isValidTemplate(template: string): template is Template {
@@ -53,11 +78,8 @@ export function isValidTemplate(template: string): template is Template {
  * 获取模板描述
  */
 export function getTemplateDescription(template: Template): string {
-  const descriptions: Record<Template, string> = {
-    'react-ts': 'React + TypeScript',
-    'vue-ts': 'Vue 3 + TypeScript',
-  };
-  return descriptions[template];
+  const templateInfo = getTemplateInfoList().find(t => t.name === template);
+  return templateInfo ? `${templateInfo.display} + TypeScript` : template;
 }
 
 /**
@@ -129,54 +151,33 @@ export async function createProject(
  * 交互式选择模板
  */
 async function promptTemplate(): Promise<Template> {
-  const templates = getAvailableTemplates();
-  const readline = await import('readline');
-  
+  const templates = getTemplateInfoList();
+
   // 如果只有一个模板，直接返回
   if (templates.length === 1) {
-    return templates[0];
+    return templates[0].name;
   }
 
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
+  const response = await prompts(
+    [
+      {
+        type: 'select',
+        name: 'template',
+        message: 'Select a framework:',
+        choices: templates.map((t) => ({
+          title: t.display,
+          value: t.name,
+        })),
+        initial: 0,
+      },
+    ],
+    {
+      onCancel: () => {
+        console.log('\n❌ Operation cancelled');
+        process.exit(0);
+      },
+    }
+  );
 
-  return new Promise((resolve) => {
-    console.log('\n📦 Select a template:\n');
-    templates.forEach((t, i) => {
-      const isDefault = i === 0;
-      console.log(`  ${i + 1}) ${getTemplateDescription(t)}${isDefault ? ' (default)' : ''}`);
-    });
-    console.log();
-
-    rl.question('Enter your choice (1-' + templates.length + '): ', (answer) => {
-      rl.close();
-      
-      const choice = answer.trim();
-      
-      // 空输入，使用默认值（第一个）
-      if (!choice) {
-        resolve(templates[0]);
-        return;
-      }
-      
-      // 数字选择
-      const index = parseInt(choice, 10) - 1;
-      if (!isNaN(index) && index >= 0 && index < templates.length) {
-        resolve(templates[index]);
-        return;
-      }
-      
-      // 直接输入模板名
-      if (isValidTemplate(choice)) {
-        resolve(choice as Template);
-        return;
-      }
-      
-      // 无效输入，使用默认值
-      console.log(`⚠️  Invalid choice, using default template...`);
-      resolve(templates[0]);
-    });
-  });
+  return response.template;
 }

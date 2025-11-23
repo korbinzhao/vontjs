@@ -1,6 +1,0 @@
-# 模板目录中不应该提交这些文件
-node_modules/
-package-lock.json
-dist/
-.DS_Store
-

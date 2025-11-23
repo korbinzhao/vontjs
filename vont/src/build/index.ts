@@ -113,6 +113,7 @@ export async function buildProject(options?: BuildOptions): Promise<void> {
       ...(Array.isArray(viteConfig.plugins) ? viteConfig.plugins : viteConfig.plugins ? [viteConfig.plugins] : []),
     ];
     
+    
     // 生成临时的 index.html（如果项目中不存在）
     const indexHtmlPath = path.join(rootDir, 'index.html');
     const indexHtmlExists = await fs.access(indexHtmlPath).then(() => true).catch(() => false);
@@ -136,7 +137,7 @@ export async function buildProject(options?: BuildOptions): Promise<void> {
     
     await viteBuild({
       root: rootDir,
-      plugins: vitePlugins,
+      plugins: viteConfig.plugins, 
       build: {
         outDir: path.join(outDir, 'client'),
         emptyOutDir: false,
@@ -151,20 +152,15 @@ export async function buildProject(options?: BuildOptions): Promise<void> {
         sourcemap: config.build?.sourcemap !== false,
         minify: config.build?.minify !== false,
         target: config.build?.target || 'es2020',
-        ...viteConfig.build,
       },
       resolve: {
         alias: {
           '@': path.join(rootDir, 'src'),
-          ...viteConfig.resolve?.alias,
         },
-        ...viteConfig.resolve,
       },
       optimizeDeps: {
-        include: ['react', 'react-dom', 'react-router-dom'],
-        ...viteConfig.optimizeDeps,
+        include: ['react', 'react-dom', 'react-router-dom', 'vue', 'vue-router'],
       },
-      ...viteConfig,
     });
     
     console.log('✅ Frontend built\n');

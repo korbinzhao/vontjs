@@ -13,11 +13,6 @@ import type { DevServerOptions, VontConfig } from '../types/index.js';
 import { loadConfig } from '../config/loader.js';
 import { generateVirtualClient } from '../generators/virtual-client.js';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const __filename = fileURLToPath(import.meta.url);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const __dirname = path.dirname(__filename);
-
 /**
  * 创建开发服务器
  */
@@ -75,16 +70,10 @@ export async function createDevServer(options?: DevServerOptions): Promise<void>
     // 合并 Vite 配置
     const viteConfig = config.viteConfig || {};
     
-    // 准备 Vite 插件列表（移除虚拟模块插件）
-    const vitePlugins = [
-      // 用户配置的 Vite 插件
-      ...(Array.isArray(viteConfig.plugins) ? viteConfig.plugins : viteConfig.plugins ? [viteConfig.plugins] : []),
-    ];
-
     const vite: ViteDevServer = await createViteServer({
       appType: 'custom',
       root: rootDir,
-      plugins: vitePlugins,
+      plugins: viteConfig.plugins, 
       server: {
         host: HOST,
         port: PORT,
@@ -98,7 +87,6 @@ export async function createDevServer(options?: DevServerOptions): Promise<void>
           usePolling: false,
           interval: 100,
         },
-        ...viteConfig.server,
       },
       build: {
         outDir: path.join(config.outDir || 'dist', 'client'),
@@ -107,21 +95,16 @@ export async function createDevServer(options?: DevServerOptions): Promise<void>
           input: path.join(rootDir, 'index.html'),
         },
         sourcemap: true,
-        ...viteConfig.build,
       },
       resolve: {
         alias: {
           '@': path.join(rootDir, 'src'),
-          ...viteConfig.resolve?.alias,
         },
-        ...viteConfig.resolve,
       },
       optimizeDeps: {
-        include: ['react', 'react-dom', 'react-router-dom'],
-        ...viteConfig.optimizeDeps,
+        include: ['react', 'react-dom', 'react-router-dom', 'vue', 'vue-router'],
       },
       logLevel: 'info',
-      ...viteConfig,
     });
 
     console.log('✅ Vite server initialized');

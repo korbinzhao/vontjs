@@ -5,14 +5,19 @@
   "private": true,
   "workspaces": [
     "vont",
-    "examples/koa-react-ts"
+    "examples/react-ts",
+    "examples/vue-ts"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=examples/koa-react-ts",
+    "dev": "npm run dev --workspace=examples/react-ts",
+    "dev:vue-ts": "npm run dev --workspace=examples/vue-ts",
     "build": "npm run build --workspace=vont",
-    "start": "npm run start --workspace=examples/koa-react-ts",
+    "build:vue-ts": "npm run build --workspace=examples/vue-ts",
+    "start": "npm run start --workspace=examples/react-ts",
+    "start:vue-ts": "npm run start --workspace=examples/vue-ts",
     "build:vont": "npm run build --workspace=vont",
-    "build:examples/koa-react-ts": "npm run build --workspace=examples/koa-react-ts"
+    "build:examples/react-ts": "npm run build --workspace=examples/react-ts",
+    "build:examples/vue-ts": "npm run build --workspace=examples/vue-ts"
   },
   "keywords": [
     "koa",

@@ -12,6 +12,11 @@ const command = args[0] || 'dev';
 console.log(`🚀 Vont Framework CLI v1.0.0\n`);
 
 switch (command) {
+  case 'create':
+    console.log('Creating new project...');
+    import('../dist/cli/create.js');
+    break;
+  
   case 'dev':
     console.log('Starting development server...');
     // 使用 tsx 加载器启动开发服务器以支持 TypeScript
@@ -45,15 +50,17 @@ switch (command) {
 Usage: vont [command] [options]
 
 Commands:
-  dev       Start development server with hot reload
-  build     Build project for production
-  start     Start production server
+  create <name>  Create a new Vont project
+  dev            Start development server with hot reload
+  build          Build project for production
+  start          Start production server
 
 Options:
   --version, -v   Show version
   --help, -h      Show help
 
 Examples:
+  $ vont create my-app
   $ vont dev
   $ vont build
   $ vont start

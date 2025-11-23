@@ -1,39 +1,86 @@
 # vont
 
-> 🚀 A modern full-stack TypeScript framework combining Koa and React with file-based routing and hot module replacement
+> 🚀 A modern full-stack TypeScript framework combining Koa and React/Vue with file-based routing and hot module replacement
 
-## Features
+[![npm version](https://img.shields.io/npm/v/vont.svg)](https://www.npmjs.com/package/vont)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.1-blue.svg)](https://www.typescriptlang.org/)
+
+## ✨ Features
 
 - 📁 **File-based Routing** - Automatic API and page routes based on file structure
 - 🔥 **Hot Module Replacement** - Instant feedback during development
 - ⚙️ **Zero Configuration** - Convention over configuration
 - 🔤 **TypeScript First** - Full type safety across your entire stack
 - 📡 **REST API Routes** - Simple function exports become API endpoints
-- ⚛️ **React Pages** - File structure becomes page routes
+- ⚛️ **React & Vue Support** - Choose your preferred frontend framework
 - 🎯 **Type Safety** - Share types between frontend and backend
 - 🏗️ **Production Ready** - Single unified deployment
 - 🔒 **Clean Architecture** - Internal files hidden in `.vont/` directory
+- ⚡ **Vite 7 Powered** - Lightning-fast builds and HMR
 
-## Installation
+## 🚀 Quick Start
 
-### In an existing project
+### Create a New Project
+
+The fastest way to get started is using the scaffolding CLI:
+
+```bash
+# Using npx (recommended)
+npx vont create my-app
+
+# Or install globally
+npm install -g vont
+vont create my-app
+```
+
+Choose your framework:
+- **React + TypeScript** (default)
+- **Vue + TypeScript**
+
+Then:
+
+```bash
+cd my-app
+npm install
+npm run dev
+```
+
+Visit `http://localhost:3000` 🎉
+
+### Add to Existing Project
 
 ```bash
 npm install vont --save-dev
 ```
 
-### Using file protocol (for local development)
+Update your `package.json`:
 
-```bash
-# In your package.json
+```json
 {
-  "devDependencies": {
-    "vont": "file:./vont"
+  "scripts": {
+    "dev": "vont dev",
+    "build": "vont build",
+    "start": "vont start"
   }
 }
 ```
 
-## Quick Start
+## 📖 Documentation
+
+### Table of Contents
+
+- [Project Structure](#project-structure)
+- [API Routes](#api-routes)
+- [Page Routes](#page-routes)
+- [Configuration](#configuration)
+- [CLI Commands](#cli-commands)
+- [Deployment](#deployment)
+- [Examples](#examples)
+
+## 📁 Project Structure
+
+## 📁 Project Structure
 
 ### 1. Update your `package.json`
 
@@ -47,7 +94,7 @@ npm install vont --save-dev
 }
 ```
 
-### 2. Project Structure
+### 2. File Structure
 
 ```
 your-project/

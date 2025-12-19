@@ -27,6 +27,38 @@ npm run build
 npm start
 ```
 
+### Deploy to Vercel
+
+This project is pre-configured for Vercel deployment with `vercel.json`.
+
+#### Option 1: Deploy via Vercel CLI
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+```
+
+#### Option 2: Deploy via Git
+
+1. Push your code to GitHub/GitLab/Bitbucket
+2. Import your repository in [Vercel Dashboard](https://vercel.com/new)
+3. Vercel will automatically detect the configuration and deploy
+
+The build command is configured to use `VONT_BUILD_TARGET=vercel` which generates Serverless Functions compatible with Vercel's runtime.
+
+#### Manual Build for Vercel
+
+```bash
+npm run build:vercel
+```
+
+This will generate:
+- `dist/client/` - Static frontend files
+- `dist/api/` - Serverless API functions
+
 ## Project Structure
 
 ```

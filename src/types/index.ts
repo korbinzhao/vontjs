@@ -87,7 +87,19 @@ export interface VontConfig {
   build?: {
     sourcemap?: boolean;
     minify?: boolean;
-    target?: string;
+    target?: string | 'vercel';
+  };
+  
+  // Vercel 部署配置
+  vercel?: {
+    /** Serverless Function 内存限制（MB） */
+    functionMemory?: number;
+    /** Serverless Function 最大执行时间（秒） */
+    functionMaxDuration?: number;
+    /** 函数运行时区域 */
+    functionRegions?: string[];
+    /** 是否使用 Build Output API v3 */
+    outputVersion?: 3;
   };
   
   // 开发模式标志（内部使用）

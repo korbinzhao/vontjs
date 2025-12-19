@@ -6,6 +6,7 @@ import type { BuildOptions, VontConfig } from '../types/index.js';
 import { loadConfig } from '../config/loader.js';
 import { generateVirtualClient } from '../generators/virtual-client.js';
 import { generateVirtualServer } from '../generators/virtual-server.js';
+import { buildForVercel } from './vercel-builder.js';
 
 /**
  * 递归查找所有 API 文件
@@ -213,31 +214,83 @@ export async function buildProject(options?: BuildOptions): Promise<void> {
     // ========================================
     // 5. 编译 API 模块
     // ========================================
-    console.log('\n📦 Compiling API modules...');
-    const apiDistDir = path.join(outDir, 'api');
+    // 检查是否为 Vercel 构建
+    const isVercelBuild = process.env.VONT_BUILD_TARGET === 'vercel' || config.build?.target === 'vercel';
 
-    try {
-      const apiFiles = await findApiFiles(apiDir);
-
-      if (apiFiles.length > 0) {
-        await esbuild({
-          entryPoints: apiFiles,
-          outdir: apiDistDir,
-          format: 'esm',
-          platform: 'node',
-          target: config.build?.target || 'es2020',
-          minify: false, // API 模块不压缩，便于调试
-          splitting: false,
-          logLevel: 'info',
-        });
-
-        console.log(`✅ Compiled ${apiFiles.length} API modules\n`);
-      } else {
-        console.log('⚠️  No API files found\n');
+    if (isVercelBuild) {
+      // Vercel 构建：使用 Build Output API v3
+      console.log('\n📦 Building for Vercel (Build Output API v3)...');
+      
+      // 先移动前端构建产物到 .vercel/output/static/
+      const clientDistDir = path.join(outDir, 'client');
+      const vercelOutputDir = path.join(outDir, '.vercel', 'output');
+      const vercelStaticDir = path.join(vercelOutputDir, 'static');
+      
+      // 确保输出目录存在
+      await fs.mkdir(vercelStaticDir, { recursive: true });
+      
+      // 移动前端文件到 static 目录
+      try {
+        const clientFiles = await fs.readdir(clientDistDir);
+        for (const file of clientFiles) {
+          const srcPath = path.join(clientDistDir, file);
+          const destPath = path.join(vercelStaticDir, file);
+          
+          // 递归复制目录或文件
+          const stat = await fs.stat(srcPath);
+          if (stat.isDirectory()) {
+            await fs.cp(srcPath, destPath, { recursive: true });
+          } else {
+            await fs.copyFile(srcPath, destPath);
+          }
+        }
+        
+        // 删除原始 client 目录
+        await fs.rm(clientDistDir, { recursive: true, force: true });
+        
+        console.log('✅ Moved frontend assets to .vercel/output/static/\n');
+      } catch (error) {
+        console.error('⚠️  Warning: Could not move frontend assets:', error);
       }
-    } catch (error) {
-      const err = error as Error;
-      console.error('⚠️  Warning: Could not compile API files:', err.message);
+      
+      // 构建 Serverless Functions
+      await buildForVercel(config, rootDir, outDir, apiDir);
+      
+      // 删除 server 构建产物（Vercel 不需要）
+      try {
+        await fs.unlink(path.join(serverDir, 'index.js'));
+        console.log('✅ Cleaned up server bundle (not needed for Vercel)\n');
+      } catch {
+        // 忽略错误
+      }
+    } else {
+      // 常规构建：编译 API 模块
+      console.log('\n📦 Compiling API modules...');
+      const apiDistDir = path.join(outDir, 'api');
+
+      try {
+        const apiFiles = await findApiFiles(apiDir);
+
+        if (apiFiles.length > 0) {
+          await esbuild({
+            entryPoints: apiFiles,
+            outdir: apiDistDir,
+            format: 'esm',
+            platform: 'node',
+            target: config.build?.target || 'es2020',
+            minify: false, // API 模块不压缩，便于调试
+            splitting: false,
+            logLevel: 'info',
+          });
+
+          console.log(`✅ Compiled ${apiFiles.length} API modules\n`);
+        } else {
+          console.log('⚠️  No API files found\n');
+        }
+      } catch (error) {
+        const err = error as Error;
+        console.error('⚠️  Warning: Could not compile API files:', err.message);
+      }
     }
 
     console.log('✨ Build completed successfully!\n');

@@ -5,6 +5,7 @@ export * from './server/prod-server.js';
 export * from './server/production.js';
 export * from './server/route-registry.js';
 export * from './server/router-generator.js';
+export * from './server/vercel-adapter.js';
 
 // 注意：客户端相关的导出不在主入口中，而是通过 exports 字段访问
 // 使用 'vont/client' 或 'vont/client/vue' 来导入客户端代码

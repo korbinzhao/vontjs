@@ -1,0 +1,5 @@
+{
+  "buildCommand": "VONT_BUILD_TARGET=vercel npm run build",
+  "outputDirectory": "dist/.vercel/output"
+}
+

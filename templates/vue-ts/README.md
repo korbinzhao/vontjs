@@ -66,6 +66,38 @@ npm run build
 npm run start
 ```
 
+### 部署到 Vercel
+
+本项目已预配置 `vercel.json`，可直接部署到 Vercel。
+
+#### 方式 1: 使用 Vercel CLI
+
+```bash
+# 安装 Vercel CLI
+npm i -g vercel
+
+# 部署
+vercel
+```
+
+#### 方式 2: 通过 Git 部署
+
+1. 将代码推送到 GitHub/GitLab/Bitbucket
+2. 在 [Vercel Dashboard](https://vercel.com/new) 导入仓库
+3. Vercel 会自动检测配置并部署
+
+构建命令已配置为使用 `VONT_BUILD_TARGET=vercel`，会生成与 Vercel Serverless Functions 兼容的 API 函数。
+
+#### 手动构建 Vercel 版本
+
+```bash
+npm run build:vercel
+```
+
+这将生成：
+- `dist/client/` - 前端静态文件
+- `dist/api/` - Serverless API 函数
+
 ## 📝 示例功能
 
 ### 1. API 路由

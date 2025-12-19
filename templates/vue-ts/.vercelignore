@@ -1,0 +1,12 @@
+node_modules
+src
+.vont
+.git
+.gitignore
+tsconfig.json
+tsconfig.node.json
+vont.config.ts
+README.md
+*.md
+.DS_Store
+

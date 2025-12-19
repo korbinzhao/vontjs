@@ -18,7 +18,7 @@ export interface BuildOutputConfig {
 }
 
 export interface OutputRoute {
-  src: string;
+  src?: string;
   dest?: string;
   headers?: Record<string, string>;
   methods?: string[];
